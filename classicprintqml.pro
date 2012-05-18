@@ -1,6 +1,8 @@
 
 TEMPLATE = app
 
+CONFIG += debug
+
 QT += declarative xml
 
 OBJECTS_DIR = build
