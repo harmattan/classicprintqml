@@ -27,7 +27,7 @@ PageStackWindow {
             spacing: 10
 
             delegate: Image {
-                source: 'file://' + modelData
+                source: 'file://' + dcimFolder + '/' + modelData
                 asynchronous: true
                 fillMode: Image.PreserveAspectFit
 
@@ -42,7 +42,7 @@ PageStackWindow {
                     anchors.fill: parent
 
                     onClicked: {
-                        displayImage.filePath = modelData;
+                        displayImage.filePath = dcimFolder + '/' + modelData;
                         pageStack.push(imagePage);
                     }
                 }
@@ -107,10 +107,11 @@ PageStackWindow {
             }
         }
 
-        BusyIndicator {
+        ProgressBar {
             anchors.centerIn: parent
-            running: visible
-            visible: displayImage.status == Image.Loading
+            width: parent.width * .9
+            visible: classicPrint.working
+            value: classicPrint.progress / 100.
         }
 
         Rectangle {

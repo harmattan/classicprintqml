@@ -17,7 +17,9 @@ class ClassicPrintDeclarative : public QObject {
         ClassicPrintDeclarative(QObject *parent=NULL)
             : QObject(parent),
               m_sequence(0),
-              m_timer()
+              m_timer(),
+              m_progress(0),
+              m_working(false)
         {
             m_timer.setInterval(500);
             m_timer.setSingleShot(true);
@@ -57,6 +59,12 @@ class ClassicPrintDeclarative : public QObject {
 
             QObject::connect(this, SIGNAL(lightLeakChanged()),
                     this, SLOT(contentUpdated()));
+
+
+            QObject::connect(getClassicPrint(), SIGNAL(progress(int)),
+                    this, SLOT(onProgress(int)));
+            QObject::connect(getClassicPrint(), SIGNAL(working(bool)),
+                    this, SLOT(onWorking(bool)));
         }
 
         static void init() {
@@ -252,6 +260,12 @@ class ClassicPrintDeclarative : public QObject {
         int sequence() { return m_sequence; }
         Q_PROPERTY(int sequence READ sequence NOTIFY sequenceChanged)
 
+        int progress() { return m_progress; }
+        Q_PROPERTY(int progress READ progress NOTIFY progressChanged)
+
+        bool working() { return m_working; }
+        Q_PROPERTY(bool working READ working NOTIFY workingChanged)
+
     signals:
         /* Lens */
         void radiusChanged();
@@ -270,6 +284,8 @@ class ClassicPrintDeclarative : public QObject {
         void lightLeakChanged();
 
         void sequenceChanged();
+        void progressChanged();
+        void workingChanged();
 
     public slots:
         void contentUpdated() {
@@ -278,11 +294,27 @@ class ClassicPrintDeclarative : public QObject {
             m_timer.start();
         }
 
+        void onProgress(int progress) {
+            if (progress != m_progress) {
+                m_progress = progress;
+                emit progressChanged();
+            }
+        }
+
+        void onWorking(bool working) {
+            if (working != m_working) {
+                m_working = working;
+                emit workingChanged();
+            }
+        }
+
     private:
         static ClassicPrint *classicPrint;
 
         int m_sequence;
         QTimer m_timer;
+        int m_progress;
+        bool m_working;
 };
 
 #endif

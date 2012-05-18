@@ -6,7 +6,7 @@
 #include "ClassicPrintProvider.h"
 #include "ClassicPrintDeclarative.h"
 
-#define CLASSICPRINTQML_DESKTOP
+//#define CLASSICPRINTQML_DESKTOP
 
 int main(int argc, char *argv[])
 {
@@ -19,9 +19,6 @@ int main(int argc, char *argv[])
 
     ClassicPrintProvider::addToView(&view);
 
-    QStringList fileModel;
-
-
 #if defined(CLASSICPRINTQML_DESKTOP)
     QDir dcim("/home/thp/Pictures/Webcam/");
 #else
@@ -29,14 +26,10 @@ int main(int argc, char *argv[])
 #endif
 
     QStringList photos;
-    photos << "*.jpg" << "*.png";
+    photos << "*.jpg";
+    QStringList fileModel = dcim.entryList(photos, QDir::Files, QDir::Time);
 
-    QStringList fileNames = dcim.entryList(photos, QDir::Files, QDir::Time);
-    QString fileName;
-    foreach (fileName, fileNames) {
-        fileModel << (dcim.absolutePath() + "/" + fileName);
-    }
-
+    view.rootContext()->setContextProperty("dcimFolder", dcim.absolutePath());
     view.rootContext()->setContextProperty("fileModel", fileModel);
     view.setSource(QUrl("qrc:/classicprintqml.qml"));
 #if defined(CLASSICPRINTQML_DESKTOP)

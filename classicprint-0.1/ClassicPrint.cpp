@@ -83,6 +83,13 @@ ClassicPrint::~ClassicPrint() {
 ** @return True/False
 */
 bool ClassicPrint::process(const QImage& photo, int width, int height, QImage& processed) {
+    emit working(true);
+    bool result = process_real(photo, width, height, processed);
+    emit working(false);
+    return result;
+}
+
+bool ClassicPrint::process_real(const QImage& photo, int width, int height, QImage& processed) {
     if (!m_current_lens || !m_current_film || !m_current_processing) {
         return false;
     }

@@ -64,6 +64,7 @@ public:
     **
     ** @return True/False
     */
+    bool    process_real(const QImage& photo, int width, int height, QImage& processed);
     bool    process(const QImage& photo, int width, int height, QImage& processed);
 
     //---------------------------------------------------------------------------
@@ -327,6 +328,7 @@ public:
 
 signals:
     void    progress(int percent);
+    void    working(bool working);
 
 private slots:
     void    progress_lens(int percent);
