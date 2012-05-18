@@ -100,6 +100,7 @@ PageStackWindow {
             MouseArea {
                 anchors.fill: parent
                 onClicked: {
+                    lensPane.state = 'down';
                     processingPane.state = 'down';
                 }
             }
@@ -109,6 +110,99 @@ PageStackWindow {
             anchors.centerIn: parent
             running: visible
             visible: displayImage.status == Image.Loading
+        }
+
+        Rectangle {
+            id: lensPane
+
+            state: 'down'
+
+            states: [
+                State {
+                    name: 'up'
+                    AnchorChanges { target: lensPane; anchors.bottom: imagePage.bottom }
+                },
+                State {
+                    name: 'down'
+                    AnchorChanges { target: lensPane; anchors.top: imagePage.bottom }
+                }
+            ]
+
+            transitions: Transition {
+                AnchorAnimation { easing.type: Easing.OutCirc }
+            }
+
+            height: lensColumn.height + 2*20
+            color: '#a0000000'
+
+            anchors {
+                left: parent.left
+                right: parent.right
+            }
+
+            Column {
+                id: lensColumn
+                width: parent.width * .8
+
+                anchors {
+                    horizontalCenter: parent.horizontalCenter
+                    top: parent.top
+                    topMargin: 20
+                }
+
+                Label { text: 'Radius' }
+
+                Slider {
+                    id: radiusSlider
+                    width: parent.width
+                    onValueChanged: {
+                        if (pressed) {
+                            classicPrint.radius = value;
+                        }
+                    }
+                }
+
+                Label { text: 'Darkness' }
+
+                Slider {
+                    id: darknessSlider
+                    width: parent.width
+                    onValueChanged: {
+                        if (pressed) {
+                            classicPrint.darkness = value;
+                        }
+                    }
+                }
+
+                Label { text: 'Dodge' }
+
+                Slider {
+                    id: dodgeSlider
+                    width: parent.width
+                    onValueChanged: {
+                        if (pressed) {
+                            classicPrint.dodge = value;
+                        }
+                    }
+                }
+
+                Row {
+                    width: parent.width
+                    spacing: 20
+
+                    Switch {
+                        id: defocusSwitch
+                        onCheckedChanged: {
+                            classicPrint.defocus = checked;
+                        }
+                    }
+
+                    Label {
+                        anchors.verticalCenter: defocusSwitch.verticalCenter
+                        text: 'Defocus'
+                    }
+                }
+            }
         }
 
         Rectangle {
@@ -128,7 +222,7 @@ PageStackWindow {
             ]
 
             transitions: Transition {
-                AnchorAnimation {}
+                AnchorAnimation { easing.type: Easing.OutCirc }
             }
 
             height: processingColumn.height + 2*20
@@ -213,18 +307,8 @@ PageStackWindow {
         id: imageMenu
 
         MenuLayout {
-            MenuItem { text: 'Lens' }
-            MenuItem { text: 'Film' }
             MenuItem {
-                text: 'Processing'
-                onClicked: {
-                    imageMenu.close();
-                    contrastSlider.value = classicPrint.contrast;
-                    colourisationSlider.value = classicPrint.colourisation;
-                    frameSizeSlider.value = classicPrint.frameSize;
-                    lightLeakRow.checkedButton = lightLeakRow.children[classicPrint.lightLeak];
-                    processingPane.state = 'up';
-                }
+                text: '...'
             }
         }
     }
@@ -240,6 +324,61 @@ PageStackWindow {
                 if (pageStack.depth > 1) {
                     pageStack.pop();
                 }
+            }
+        }
+
+        ToolIcon {
+            id: lensTool
+            visible: pageStack.currentPage == imagePage
+            iconId: 'icon-m-toolbar-image-edit-white'
+            anchors {
+                right: filmTool.left
+                rightMargin: 20
+            }
+            onClicked: {
+                if (lensPane.state === 'up') {
+                    lensPane.state = 'down';
+                    return;
+                }
+
+                radiusSlider.value = classicPrint.radius;
+                darknessSlider.value = classicPrint.darkness;
+                dodgeSlider.value = classicPrint.dodge;
+                defocusSwitch.checked = classicPrint.defocus;
+
+                processingPane.state = 'down';
+                lensPane.state = 'up';
+            }
+        }
+
+        ToolIcon {
+            id: filmTool
+            visible: pageStack.currentPage == imagePage
+            iconId: 'icon-m-toolbar-all-content-white'
+            anchors.horizontalCenter: parent.horizontalCenter
+        }
+
+        ToolIcon {
+            id: processingTool
+            visible: pageStack.currentPage == imagePage
+            anchors {
+                left: filmTool.right
+                leftMargin: 20
+            }
+            iconId: 'icon-m-toolbar-new-email-white'
+            onClicked: {
+                if (processingPane.state === 'up') {
+                    processingPane.state = 'down';
+                    return;
+                }
+
+                contrastSlider.value = classicPrint.contrast;
+                colourisationSlider.value = classicPrint.colourisation;
+                frameSizeSlider.value = classicPrint.frameSize;
+                lightLeakRow.checkedButton = lightLeakRow.children[classicPrint.lightLeak];
+
+                lensPane.state = 'down';
+                processingPane.state = 'up';
             }
         }
 

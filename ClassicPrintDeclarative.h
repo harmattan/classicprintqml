@@ -6,6 +6,7 @@
 #include <QtDeclarative>
 
 #include "ClassicPrint.h"
+#include "ClassicPrintLens.h"
 #include "ClassicPrintProcessing.h"
 
 class ClassicPrintDeclarative : public QObject {
@@ -23,6 +24,20 @@ class ClassicPrintDeclarative : public QObject {
             QObject::connect(&m_timer, SIGNAL(timeout()),
                     this, SIGNAL(sequenceChanged()));
 
+            /* Lens */
+            QObject::connect(this, SIGNAL(radiusChanged()),
+                    this, SLOT(contentUpdated()));
+
+            QObject::connect(this, SIGNAL(darknessChanged()),
+                    this, SLOT(contentUpdated()));
+
+            QObject::connect(this, SIGNAL(dodgeChanged()),
+                    this, SLOT(contentUpdated()));
+
+            QObject::connect(this, SIGNAL(defocusChanged()),
+                    this, SLOT(contentUpdated()));
+
+            /* Processing */
             QObject::connect(this, SIGNAL(contrastChanged()),
                     this, SLOT(contentUpdated()));
 
@@ -46,6 +61,71 @@ class ClassicPrintDeclarative : public QObject {
         static ClassicPrint *getClassicPrint() {
             return classicPrint;
         }
+
+
+
+        /* Lens */
+
+        qreal radius() {
+            return getClassicPrint()->getCurrentLens()->radius()/99.;
+        }
+
+        void setRadius(qreal radius) {
+            getClassicPrint()->getCurrentLens()->setRadius(radius*99.);
+            emit radiusChanged();
+        }
+
+        Q_PROPERTY(qreal radius
+                READ radius
+                WRITE setRadius
+                NOTIFY radiusChanged)
+
+        qreal darkness() {
+            return getClassicPrint()->getCurrentLens()->darkness()/100.;
+        }
+
+        void setDarkness(qreal darkness) {
+            getClassicPrint()->getCurrentLens()->setDarkness(darkness*100.);
+            emit darknessChanged();
+        }
+
+        Q_PROPERTY(qreal darkness
+                READ darkness
+                WRITE setDarkness
+                NOTIFY darknessChanged)
+
+        qreal dodge() {
+            return getClassicPrint()->getCurrentLens()->dodge()/100.;
+        }
+
+        void setDodge(qreal dodge) {
+            getClassicPrint()->getCurrentLens()->setDodge(dodge*100.);
+            emit dodgeChanged();
+        }
+
+        Q_PROPERTY(qreal dodge
+                READ dodge
+                WRITE setDodge
+                NOTIFY dodgeChanged)
+
+        bool defocus() {
+            return getClassicPrint()->getCurrentLens()->defocus();
+        }
+
+        void setDefocus(bool defocus) {
+            if (defocus != this->defocus()) {
+                getClassicPrint()->getCurrentLens()->setDefocus(defocus);
+                emit defocusChanged();
+            }
+        }
+
+        Q_PROPERTY(bool defocus
+                READ defocus
+                WRITE setDefocus
+                NOTIFY defocusChanged)
+
+
+        /* Processing */
 
         qreal contrast() {
             return getClassicPrint()->getCurrentProcessing()->contrast()/100.;
@@ -135,6 +215,13 @@ class ClassicPrintDeclarative : public QObject {
         Q_PROPERTY(int sequence READ sequence NOTIFY sequenceChanged)
 
     signals:
+        /* Lens */
+        void radiusChanged();
+        void darknessChanged();
+        void dodgeChanged();
+        void defocusChanged();
+
+        /* Processing */
         void contrastChanged();
         void colourisationChanged();
         void frameSizeChanged();
