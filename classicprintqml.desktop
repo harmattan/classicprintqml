@@ -1,0 +1,8 @@
+[Desktop Entry]
+Name=Classic Print
+Exec=invoker --single-instance --type=e /opt/classicprintqml/bin/classicprintqml
+Icon=/opt/classicprintqml/classicprintqml.png
+Terminal=false
+Type=Application
+Categories=Graphics;Photography;
+

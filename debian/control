@@ -1,0 +1,13 @@
+Source: classicprintqml
+Section: user/graphics
+Priority: extra
+Maintainer: Thomas Perl <m@thp.io>
+Build-Depends: debhelper (>= 8.0.0)
+Standards-Version: 3.9.2
+Homepage: <TODO>
+
+Package: classicprintqml
+Architecture: any
+Depends: ${shlibs:Depends}, ${misc:Depends}
+Description: Classic Print Photo Effects
+ Edit your photos and add hipster-style effects to them.

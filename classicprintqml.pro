@@ -3,11 +3,22 @@ TEMPLATE = app
 
 QT += declarative xml
 
-CONFIG += debug
-
 OBJECTS_DIR = build
 MOC_DIR = build
 RCC_DIR = build
+
+# Deployment on MeeGo Harmattan
+target.path = /opt/classicprintqml/bin
+INSTALLS += target
+
+icon.path = /opt/classicprintqml
+icon.files = classicprintqml.png
+INSTALLS += icon
+
+desktop.path = /usr/share/applications
+desktop.files = classicprintqml.desktop
+INSTALLS += desktop
+
 
 # Main application
 DEPENDPATH += .

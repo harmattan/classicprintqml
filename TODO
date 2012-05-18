@@ -1,0 +1,15 @@
+
+ - Create a QML object ("ClassicPrint") that exposes all the
+   settings of the ClassicPrint core, and use it in the QML
+   UI (probably simplified compared to the QWiget-based UI).
+
+ - Add ability to save and share photos.
+
+ - Add ability to load files from somewhere other than DCIM.
+
+ - Lazily load file list to make startup faster.
+
+ - Add ability to save settings and share with other users.
+
+ - Provide some presets for users to get started easily.
+

@@ -22,14 +22,17 @@ class ClassicPrintProvider : public QDeclarativeImageProvider {
         QImage requestImage(const QString &id, QSize *size,
                 const QSize &requestedSize)
         {
-            Q_UNUSED(size);
+            if (id == "") {
+                return QImage();
+            }
 
             QImage source("/" + id);
             size->setWidth(source.width());
             size->setHeight(source.height());
 
             QImage destination(requestedSize, source.format());
-            classicPrint.process(source,
+            classicPrint.process(source.scaled(requestedSize,
+                        Qt::KeepAspectRatio),
                     requestedSize.width(),
                     requestedSize.height(),
                     destination);
