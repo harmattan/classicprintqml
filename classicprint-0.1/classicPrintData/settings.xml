@@ -1,0 +1,34 @@
+<!DOCTYPE ClassicPrint>
+<ClassicPrint>
+ <LastPhotoFolder>/home/user/MyDocs/DCIM</LastPhotoFolder>
+ <LastSaveFolder>/home/user/MyDocs</LastSaveFolder>
+ <Lenses>
+  <lens>
+   <Name>Plastic</Name>
+   <Radius>30</Radius>
+   <Darkness>50</Darkness>
+   <Dodge>80</Dodge>
+   <Defocus>1</Defocus>
+  </lens>
+ </Lenses>
+ <Films>
+  <film>
+   <Name>RetroFilm</Name>
+   <Temperature>90</Temperature>
+   <Noise>20</Noise>
+  </film>
+ </Films>
+ <Processes>
+  <Processing>
+   <Name>RetroProcess</Name>
+   <Contrast>20</Contrast>
+   <Colourisation>
+    <Percent>75</Percent>
+    <Colours>Slide X</Colours>
+   </Colourisation>
+   <LightLeak></LightLeak>
+   <FrameSize>40</FrameSize>
+  </Processing>
+ </Processes>
+</ClassicPrint>
+

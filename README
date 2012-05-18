@@ -1,0 +1,10 @@
+
+                     QML port of Roy Hopkins' ClassicPrint
+                     =====================================
+
+This is the port of "ClassicPrint" for the N900 to QML. It re-uses most of the
+C++/Qt backend, but adds a QML interface (image provider + other object) to
+utilize the ClassicPrint core from a QML application on e.g. MeeGo Harmattan.
+
+    Contact information: Thomas Perl <thp.io/about>
+

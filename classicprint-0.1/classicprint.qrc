@@ -1,0 +1,10 @@
+<!DOCTYPE RCC><RCC version="1.0">
+<qresource>
+    <file>classicPrintData/colour_profile/colour_profiles.xml</file>
+    <file>classicPrintData/settings.xml</file>
+    <file>classicPrintData/light_leak/Light Leak 1.jpg</file>
+    <file>classicPrintData/light_leak/Light Leak 3.jpg</file>
+    <file>classicPrintData/light_leak/Light Leak 2.jpg</file>
+    <file>classicPrintData/noise/noise.jpg</file>
+</qresource>
+</RCC>
