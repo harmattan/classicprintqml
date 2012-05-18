@@ -101,6 +101,7 @@ PageStackWindow {
                 anchors.fill: parent
                 onClicked: {
                     lensPane.state = 'down';
+                    filmPane.state = 'down';
                     processingPane.state = 'down';
                 }
             }
@@ -200,6 +201,70 @@ PageStackWindow {
                     Label {
                         anchors.verticalCenter: defocusSwitch.verticalCenter
                         text: 'Defocus'
+                    }
+                }
+            }
+        }
+
+        Rectangle {
+            id: filmPane
+
+            state: 'down'
+
+            states: [
+                State {
+                    name: 'up'
+                    AnchorChanges { target: filmPane; anchors.bottom: imagePage.bottom }
+                },
+                State {
+                    name: 'down'
+                    AnchorChanges { target: filmPane; anchors.top: imagePage.bottom }
+                }
+            ]
+
+            transitions: Transition {
+                AnchorAnimation { easing.type: Easing.OutCirc }
+            }
+
+            height: filmColumn.height + 2*20
+            color: '#a0000000'
+
+            anchors {
+                left: parent.left
+                right: parent.right
+            }
+
+            Column {
+                id: filmColumn
+                width: parent.width * .8
+
+                anchors {
+                    horizontalCenter: parent.horizontalCenter
+                    top: parent.top
+                    topMargin: 20
+                }
+
+                Label { text: 'Temperature' }
+
+                Slider {
+                    id: temperatureSlider
+                    width: parent.width
+                    onValueChanged: {
+                        if (pressed) {
+                            classicPrint.temperature = value;
+                        }
+                    }
+                }
+
+                Label { text: 'Noise' }
+
+                Slider {
+                    id: noiseSlider
+                    width: parent.width
+                    onValueChanged: {
+                        if (pressed) {
+                            classicPrint.noise = value;
+                        }
                     }
                 }
             }
@@ -346,6 +411,7 @@ PageStackWindow {
                 dodgeSlider.value = classicPrint.dodge;
                 defocusSwitch.checked = classicPrint.defocus;
 
+                filmPane.state = 'down';
                 processingPane.state = 'down';
                 lensPane.state = 'up';
             }
@@ -356,6 +422,19 @@ PageStackWindow {
             visible: pageStack.currentPage == imagePage
             iconId: 'icon-m-toolbar-all-content-white'
             anchors.horizontalCenter: parent.horizontalCenter
+            onClicked: {
+                if (filmPane.state === 'up') {
+                    filmPane.state = 'down';
+                    return;
+                }
+
+                temperatureSlider.value = classicPrint.temperature;
+                noiseSlider.value = classicPrint.noise;
+
+                lensPane.state = 'down';
+                processingPane.state = 'down';
+                filmPane.state = 'up';
+            }
         }
 
         ToolIcon {
@@ -378,6 +457,7 @@ PageStackWindow {
                 lightLeakRow.checkedButton = lightLeakRow.children[classicPrint.lightLeak];
 
                 lensPane.state = 'down';
+                filmPane.state = 'down';
                 processingPane.state = 'up';
             }
         }

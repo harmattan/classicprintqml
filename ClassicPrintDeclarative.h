@@ -7,6 +7,7 @@
 
 #include "ClassicPrint.h"
 #include "ClassicPrintLens.h"
+#include "ClassicPrintFilm.h"
 #include "ClassicPrintProcessing.h"
 
 class ClassicPrintDeclarative : public QObject {
@@ -35,6 +36,13 @@ class ClassicPrintDeclarative : public QObject {
                     this, SLOT(contentUpdated()));
 
             QObject::connect(this, SIGNAL(defocusChanged()),
+                    this, SLOT(contentUpdated()));
+
+            /* Film */
+            QObject::connect(this, SIGNAL(temperatureChanged()),
+                    this, SLOT(contentUpdated()));
+
+            QObject::connect(this, SIGNAL(noiseChanged()),
                     this, SLOT(contentUpdated()));
 
             /* Processing */
@@ -123,6 +131,36 @@ class ClassicPrintDeclarative : public QObject {
                 READ defocus
                 WRITE setDefocus
                 NOTIFY defocusChanged)
+
+
+        /* Film */
+        qreal temperature() {
+            return getClassicPrint()->getCurrentFilm()->temperature()/100.;
+        }
+
+        void setTemperature(qreal temperature) {
+            getClassicPrint()->getCurrentFilm()->setTemperature(temperature*100.);
+            emit temperatureChanged();
+        }
+
+        Q_PROPERTY(qreal temperature
+                READ temperature
+                WRITE setTemperature
+                NOTIFY temperatureChanged)
+
+        qreal noise() {
+            return getClassicPrint()->getCurrentFilm()->noise()/100.;
+        }
+
+        void setNoise(qreal noise) {
+            getClassicPrint()->getCurrentFilm()->setNoise(noise*100.);
+            emit noiseChanged();
+        }
+
+        Q_PROPERTY(qreal noise
+                READ noise
+                WRITE setNoise
+                NOTIFY noiseChanged)
 
 
         /* Processing */
@@ -220,6 +258,10 @@ class ClassicPrintDeclarative : public QObject {
         void darknessChanged();
         void dodgeChanged();
         void defocusChanged();
+
+        /* Film */
+        void temperatureChanged();
+        void noiseChanged();
 
         /* Processing */
         void contrastChanged();

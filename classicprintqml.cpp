@@ -6,7 +6,7 @@
 #include "ClassicPrintProvider.h"
 #include "ClassicPrintDeclarative.h"
 
-//#define CLASSICPRINTQML_DESKTOP
+#define CLASSICPRINTQML_DESKTOP
 
 int main(int argc, char *argv[])
 {
