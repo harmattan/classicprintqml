@@ -8,6 +8,8 @@ import org.maemo.classicprint 1.0
 PageStackWindow {
     initialPage: listPage
 
+    showToolBar: !classicPrint.saving
+
     ClassicPrint {
         id: classicPrint
     }
@@ -74,6 +76,7 @@ PageStackWindow {
 
             Image {
                 id: displayImage
+                visible: !classicPrint.saving
                 asynchronous: true
                 property string filePath: ''
 
@@ -107,7 +110,18 @@ PageStackWindow {
             }
         }
 
+        Label {
+            anchors {
+                horizontalCenter: progressBar.horizontalCenter
+                bottom: progressBar.top
+                bottomMargin: 30
+            }
+            text: 'Saving photo...'
+            visible: classicPrint.saving
+        }
+
         ProgressBar {
+            id: progressBar
             anchors.centerIn: parent
             width: parent.width * .9
             visible: classicPrint.working
@@ -116,6 +130,7 @@ PageStackWindow {
 
         Rectangle {
             id: lensPane
+            visible: !classicPrint.saving
 
             state: 'down'
 
@@ -209,6 +224,7 @@ PageStackWindow {
 
         Rectangle {
             id: filmPane
+            visible: !classicPrint.saving
 
             state: 'down'
 
@@ -273,6 +289,7 @@ PageStackWindow {
 
         Rectangle {
             id: processingPane
+            visible: !classicPrint.saving
 
             state: 'down'
 
@@ -374,7 +391,8 @@ PageStackWindow {
 
         MenuLayout {
             MenuItem {
-                text: '...'
+                text: 'Save'
+                onClicked: classicPrint.save(displayImage.filePath);
             }
         }
     }

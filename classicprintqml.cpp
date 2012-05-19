@@ -21,9 +21,12 @@ int main(int argc, char *argv[])
 
 #if defined(CLASSICPRINTQML_DESKTOP)
     QDir dcim("/home/thp/Pictures/Webcam/");
+    ClassicPrintDeclarative::destinationFolder = "/home/thp/Desktop/Classic Print/";
 #else
     QDir dcim("/home/user/MyDocs/DCIM/");
+    ClassicPrintDeclarative::destinationFolder = "/home/user/MyDocs/Pictures/Classic Print/";
 #endif
+    QDir(ClassicPrintDeclarative::destinationFolder).mkpath(".");
 
     QStringList photos;
     photos << "*.jpg";

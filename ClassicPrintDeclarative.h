@@ -10,6 +10,8 @@
 #include "ClassicPrintFilm.h"
 #include "ClassicPrintProcessing.h"
 
+#include "ClassicPrintThread.h"
+
 class ClassicPrintDeclarative : public QObject {
     Q_OBJECT
 
@@ -19,7 +21,9 @@ class ClassicPrintDeclarative : public QObject {
               m_sequence(0),
               m_timer(),
               m_progress(0),
-              m_working(false)
+              m_working(false),
+              m_thread(NULL),
+              m_saving(false)
         {
             m_timer.setInterval(500);
             m_timer.setSingleShot(true);
@@ -79,6 +83,28 @@ class ClassicPrintDeclarative : public QObject {
         }
 
 
+        Q_INVOKABLE
+        void save(QString filename) {
+            m_saving = true;
+            emit savingChanged();
+
+            if (m_thread != NULL) {
+                m_thread->wait();
+                delete m_thread;
+            }
+
+            QFileInfo fi(filename);
+            QString now = QDateTime::currentDateTime().toString("yyyy-MM-dd_hh-mm-ss");
+            QString destination = fi.baseName() + "_" + now + "." + fi.suffix();
+
+            m_thread = new ClassicPrintThread(getClassicPrint(),
+                    filename, QDir(destinationFolder).filePath(destination));
+
+            QObject::connect(m_thread, SIGNAL(finished()),
+                    this, SLOT(savingFinished()));
+
+            m_thread->start();
+        }
 
         /* Lens */
 
@@ -266,6 +292,11 @@ class ClassicPrintDeclarative : public QObject {
         bool working() { return m_working; }
         Q_PROPERTY(bool working READ working NOTIFY workingChanged)
 
+        bool saving() { return m_saving; }
+        Q_PROPERTY(bool saving READ saving NOTIFY savingChanged)
+
+        static QString destinationFolder;
+
     signals:
         /* Lens */
         void radiusChanged();
@@ -286,6 +317,7 @@ class ClassicPrintDeclarative : public QObject {
         void sequenceChanged();
         void progressChanged();
         void workingChanged();
+        void savingChanged();
 
     public slots:
         void contentUpdated() {
@@ -308,6 +340,13 @@ class ClassicPrintDeclarative : public QObject {
             }
         }
 
+        void savingFinished() {
+            if (m_saving) {
+                m_saving = false;
+                emit savingChanged();
+            }
+        }
+
     private:
         static ClassicPrint *classicPrint;
 
@@ -315,6 +354,8 @@ class ClassicPrintDeclarative : public QObject {
         QTimer m_timer;
         int m_progress;
         bool m_working;
+        ClassicPrintThread *m_thread;
+        bool m_saving;
 };
 
 #endif
