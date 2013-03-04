@@ -6,6 +6,8 @@
 #include "ClassicPrintProvider.h"
 #include "ClassicPrintDeclarative.h"
 
+#include "custom_listdir.h"
+
 //#define CLASSICPRINTQML_DESKTOP
 
 int main(int argc, char *argv[])
@@ -28,9 +30,10 @@ int main(int argc, char *argv[])
 #endif
     QDir(ClassicPrintDeclarative::destinationFolder).mkpath(".");
 
-    QStringList photos;
-    photos << "*.jpg";
-    QStringList fileModel = dcim.entryList(photos, QDir::Files, QDir::Time);
+    QTime benchmark;
+    benchmark.start();
+    QStringList fileModel = custom_listdir(dcim);
+    qDebug() << "duration: " << benchmark.elapsed();
 
     view.rootContext()->setContextProperty("dcimFolder", dcim.absolutePath());
     view.rootContext()->setContextProperty("fileModel", fileModel);
